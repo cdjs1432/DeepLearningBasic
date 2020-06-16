@@ -39,7 +39,7 @@ t = np.array([0, 0, 1])
 print(cross_entropy_loss(y, t))
 
 # load data
-train = pd.read_csv("./Data/MNIST_data/mnist_train.csv")
+train = pd.read_csv("../Data/MNIST_data/mnist_train.csv")
 y_train = train["label"]
 x_train = train.drop("label", 1)
 x_train = x_train.values / x_train.values.max()
@@ -63,10 +63,10 @@ w, b = ComputeGrad.SoftmaxGD(x_train, y_train, w, b, learning_rate, epoch, batch
 
 pred = x_train.dot(w) + b
 pred = softmax(pred)
-print("ACC : ", (pred.argmax(1) == y_train.argmax(1)).mean())
+print("TRAIN ACC : ", (pred.argmax(1) == y_train.argmax(1)).mean())
 
 # load data
-test = pd.read_csv("./Data/MNIST_data/mnist_test.csv")
+test = pd.read_csv("../Data/MNIST_data/mnist_test.csv")
 y_test = test["label"]
 x_test = test.drop("label", 1)
 x_test = x_test.values / x_test.values.max()
@@ -79,4 +79,4 @@ y_test = one_hot
 
 pred = x_test.dot(w) + b
 pred = softmax(pred)
-print("ACC : ", (pred.argmax(1) == y_test.argmax(1)).mean())
+print("TEST ACC : ", (pred.argmax(1) == y_test.argmax(1)).mean())

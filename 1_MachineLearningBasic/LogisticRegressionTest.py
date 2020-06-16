@@ -23,7 +23,7 @@ test_x = test_x.values
 test_x /= test_x.max(axis=0)
 test_y = test_y.values
 
-w = np.zeros(8)
+w = np.ones(8)
 b = 0
 
 w, b = ComputeGrad.LogisticGD(train_x, train_y, w, b, learning_rate=0.01)

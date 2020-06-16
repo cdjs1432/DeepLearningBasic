@@ -28,28 +28,6 @@ def cross_entropy_loss(y, t):
     return -np.sum(t * np.log(y + C)) / batch_size
 
 
-def LinearGradient(x, y, b, w):
-    if type(w) != np.ndarray:
-        w = float(w)
-        w = np.reshape(w, (1, 1))
-    if x.size == x.shape[0]:
-        x = x.reshape(x.shape[0], 1)
-    if y.size == y.shape[0]:
-        y = y.reshape(y.shape[0], 1)
-
-    pred = x.dot(w) + b  # y = w1x1 + w2x2 + ... + wmxm + b
-    """
-    err = 1/m * ((Wx1 + b - y1)^2 + (Wx2 + b - y2)^2 + ... + (Wxm + b - ym)^2)
-    to minimize err --> differentiate w and b
-    dw = 2/m * ((Wx1 + b - y1) * x1 + (Wx2 + b - y2) * x2 + ... + (Wxm + b - ym) * xm) 
-    db = 2/m * ((Wx1 + b - y1) * 1 + (Wx2 + b - y2) * 1 + ... + (Wxm + b - ym))  
-    """
-    dw = ((pred - y) * x).mean(0)
-    db = (pred - y).mean()
-    dw = dw.reshape(dw.shape[0], 1)
-    return dw, db
-
-
 def GradientDescent(x, y, b, w, learning_rate=0.01, epoch=10000):
     if type(w) != np.ndarray:
         w = float(w)
