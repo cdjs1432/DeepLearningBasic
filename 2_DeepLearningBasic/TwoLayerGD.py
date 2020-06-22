@@ -18,7 +18,8 @@ y_train = one_hot
 num_classes = y_train.shape[1]
 hidden = 50
 
-keys = ['w1', 'b1', 'sigmoid', 'w2', 'b2']
+
+keys = ['w1', 'b1', 'ReLU', 'w2', 'b2']
 params = {}
 params['w1'] = np.random.uniform(-1, 1, (x_train.shape[1], hidden))
 params['b1'] = np.random.uniform(-1, 1, (hidden))
@@ -28,7 +29,7 @@ params['b2'] = np.random.uniform(-1, 1, (num_classes))
 layers = {}
 layers['w1'] = Layers.MulLayer(params['w1'])
 layers['b1'] = Layers.AddLayer(params['b1'])
-layers['sigmoid'] = Layers.SigmoidLayer()
+layers['ReLU'] = Layers.ELU()
 layers['w2'] = Layers.MulLayer(params['w2'])
 layers['b2'] = Layers.AddLayer(params['b2'])
 lastlayer = Layers.SoftmaxLayer()
@@ -59,7 +60,7 @@ for epoch in range(epochs):
 
     for key in reversed(keys):
         dout = layers[key].backward(dout)
-        if key != 'sigmoid':
+        if key != 'ReLU':
             grads[key] = layers[key].grad
             params[key] -= learning_rate * grads[key]
 

@@ -29,29 +29,29 @@ def cross_entropy_loss(y, t):
 
 
 class MulLayer:
-    def __init__(self, w):
+    def __init__(self, param=None):
         self.x = None
-        self.w = w
+        self.param = param
         self.grad = None
 
     def forward(self, x):
         self.x = x
-        return x.dot(self.w)
+        return x.dot(self.param)
 
     def backward(self, dout):
         self.grad = np.dot(self.x.T, dout)
-        return np.dot(dout, self.w.T)
+        return np.dot(dout, self.param.T)
 
 
 class AddLayer:
-    def __init__(self, b):
+    def __init__(self, param=None):
         self.x = None
-        self.b = b
+        self.param = param
         self.grad = None
 
     def forward(self, x):
         self.x = x
-        return x + self.b
+        return x + self.param
 
     def backward(self, dout):
         self.grad = dout.mean()
@@ -101,3 +101,47 @@ class SoftmaxLayer:
         batch_size = self.t.shape[0]
         dx = (self.y - self.t) / batch_size
         return dx
+
+
+class ReLU:
+    def __init__(self):
+        self.out = None
+
+    def forward(self, z):
+        self.out = z
+        self.out[self.out <= 0] = 0
+        return self.out
+
+    def backward(self, dout):
+        self.out[self.out > 0] = 1
+        return self.out * dout
+
+
+class LeakyReLU:
+    def __init__(self):
+        self.out = None
+
+    def forward(self, z):
+        self.out = z
+        self.out[self.out <= 0] *= 0.1
+        return self.out
+
+    def backward(self, dout):
+        self.out[self.out > 0] = 1
+        self.out[self.out <= 0] = 0.1
+        return self.out * dout
+
+
+class ELU:
+    def __init__(self):
+        self.out = None
+
+    def forward(self, z):
+        self.out = z
+        self.out[self.out <= 0] = np.exp(self.out[self.out <= 0]) - 1
+        return self.out
+
+    def backward(self, dout):
+        self.out[self.out > 0] = 1
+        self.out[self.out <= 0] += 1
+        return self.out * dout
