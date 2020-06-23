@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from Model import Model
 import Layers
+import Optimizer
 
 # load data
 train = pd.read_csv("../Data/MNIST_data/mnist_train.csv")
@@ -27,6 +28,5 @@ model.addlayer(Layers.MulLayer(), input_size=(32, 10), name="w2")
 model.addlayer(Layers.AddLayer(), input_size=10, name='b2')
 model.addlayer(Layers.SoftmaxLayer(), activation=True, name='softmax')
 
-model.train(x_train, y_train, 10000, 0.01, 128)
-
-model.predict(x_train, y_train)
+optimizer = Optimizer.Momentum(batch_size=128, momentum=0.9)
+model.train(x_train, y_train, optimizer, 10000, 0.01)
