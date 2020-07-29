@@ -14,10 +14,11 @@ y_train = y_train.values
 # y to one-hot
 one_hot = np.zeros((y_train.shape[0], y_train.max() + 1))
 one_hot[np.arange(y_train.shape[0]), y_train] = 1
-y_train = one_hot[:300]
-y_test = one_hot[300:600]
-x_test = x_train[300:600]
-x_train = x_train[:300]
+print(one_hot.shape)
+y_train = one_hot[:50000]
+y_test = one_hot[50000:60000]
+x_test = x_train[50000:60000]
+x_train = x_train[:50000]
 
 # initialize parameters
 num_classes = y_train.shape[1]
