@@ -20,13 +20,14 @@ class SGD:
                 key = model.keys[i]
                 dout = model.layers[key].backward(dout)
                 if key in model.params:
-                    model.grads[key] = model.layers[key].grad
+                    model.grads[key] = model.layers[key].grad + model.weight_decay_lambda[key] * model.params[key]
                     model.params[key] -= learning_rate * model.grads[key]
 
             if epochs % (epoch / 10) == 0:
+                model.predict(x, y, train_flag=False)
                 print("ACC on epoch %d : " % epochs, (model.pred.argmax(1) == y.argmax(1)).mean())
                 print("LOSS on epoch %d : " % epochs, model.loss)
-        model.predict(x_train, y_train)
+        model.predict(x_train, y_train, train_flag=False)
         print("Final train_ACC : ", (model.pred.argmax(1) == y_train.argmax(1)).mean())
         print("Final train_LOSS : ", model.loss)
 

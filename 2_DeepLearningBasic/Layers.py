@@ -1,6 +1,21 @@
 import numpy as np
 
 
+def xavier_initialization(input_size):
+    fan_in = input_size[0]
+    fan_out = input_size[1]
+    n = np.sqrt(6 / (fan_in + fan_out))
+    w = np.random.uniform(-n, n, input_size)
+    return w
+
+
+def he_initialization(input_size):
+    fan_in = input_size[0]
+    n = np.sqrt(6 / fan_in)
+    w = np.random.uniform(-n, n, input_size)
+    return w
+
+
 def sigmoid(x):
     return 1.0 / (1.0 + np.exp(-x))
 
@@ -145,3 +160,19 @@ class ELU:
         self.out[self.out > 0] = 1
         self.out[self.out <= 0] += 1
         return self.out * dout
+
+
+class Dropout:
+    def __init__(self, dropout_rate=0.2):
+        self.drop_rate = dropout_rate
+        self.mask = None
+
+    def forward(self, x, train_flag=True):
+        if train_flag:
+            self.mask = np.random.rand(*x.shape) > self.drop_rate
+            return x * self.mask
+        else:
+            return x * (1.0 - self.drop_rate)
+
+    def backward(self, dout):
+        return dout * self.mask
