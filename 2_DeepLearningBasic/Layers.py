@@ -44,10 +44,14 @@ def cross_entropy_loss(y, t):
 
 
 class MulLayer:
-    def __init__(self, param=None):
+    def __init__(self, out, initializer='he', reg=0):
         self.x = None
-        self.param = param
+        self.out = out
+        self.param = None
         self.grad = None
+        self.init = initializer
+        self.reg = reg
+        self.activation = False
 
     def forward(self, x):
         self.x = x
@@ -59,10 +63,14 @@ class MulLayer:
 
 
 class AddLayer:
-    def __init__(self, param=None):
+    def __init__(self, out, initializer='he', reg=0):
         self.x = None
-        self.param = param
+        self.out = out
+        self.param = None
         self.grad = None
+        self.init = initializer
+        self.reg = reg
+        self.activation = False
 
     def forward(self, x):
         self.x = x
@@ -79,6 +87,7 @@ class MSELayer:
         self.y = y
         self.loss = None
 
+
     def forward(self, x):
         self.x = x
         self.loss = np.square(x - self.y).mean()
@@ -91,6 +100,7 @@ class MSELayer:
 class SigmoidLayer:
     def __init__(self):
         self.out = None
+        self.activation = True
 
     def forward(self, z):
         self.out = sigmoid(z)
@@ -105,6 +115,7 @@ class SoftmaxLayer:
         self.loss = None
         self.y = None
         self.t = None
+        self.activation = True
 
     def forward(self, x, t):
         self.t = t
@@ -121,6 +132,7 @@ class SoftmaxLayer:
 class ReLU:
     def __init__(self):
         self.out = None
+        self.activation = True
 
     def forward(self, z):
         self.out = z
@@ -135,6 +147,7 @@ class ReLU:
 class LeakyReLU:
     def __init__(self):
         self.out = None
+        self.activation = True
 
     def forward(self, z):
         self.out = z
@@ -150,6 +163,7 @@ class LeakyReLU:
 class ELU:
     def __init__(self):
         self.out = None
+        self.activation = True
 
     def forward(self, z):
         self.out = z
@@ -166,6 +180,7 @@ class Dropout:
     def __init__(self, dropout_rate=0.2):
         self.drop_rate = dropout_rate
         self.mask = None
+        self.activation = True
 
     def forward(self, x, train_flag=True):
         if train_flag:
