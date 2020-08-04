@@ -44,7 +44,7 @@ def cross_entropy_loss(y, t):
 
 
 class MulLayer:
-    def __init__(self, out, initializer='he', reg=0):
+    def __init__(self, out=None, initializer='he', reg=0):
         self.x = None
         self.out = out
         self.param = None
@@ -63,7 +63,7 @@ class MulLayer:
 
 
 class AddLayer:
-    def __init__(self, out, initializer='he', reg=0):
+    def __init__(self, out=None, initializer='he', reg=0):
         self.x = None
         self.out = out
         self.param = None

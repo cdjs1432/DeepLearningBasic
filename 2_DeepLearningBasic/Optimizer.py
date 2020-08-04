@@ -14,7 +14,9 @@ class SGD:
             x = x_train[batch_mask]
             y = y_train[batch_mask]
 
-            model.predict(x, y)
+            z = model.forward(x)
+            model.loss = model.layers[model.keys[-1]].forward(z, y)
+            model.loss += sum(model.l2.values()) / 2
             dout = model.layers[model.keys[-1]].backward()
             for i in reversed(range(len(model.keys) - 1)):
                 key = model.keys[i]
@@ -24,12 +26,8 @@ class SGD:
                     model.params[key] -= learning_rate * model.grads[key]
 
             if epochs % (epoch / 10) == 0:
-                model.predict(x, y, train_flag=False)
-                print("ACC on epoch %d : " % epochs, (model.pred.argmax(1) == y.argmax(1)).mean())
-                print("LOSS on epoch %d : " % epochs, model.loss)
-        model.predict(x_train, y_train, train_flag=False)
-        print("Final train_ACC : ", (model.pred.argmax(1) == y_train.argmax(1)).mean())
-        print("Final train_LOSS : ", model.loss)
+                model.eval(x, y, epoch=epochs)
+        model.eval(x_train, y_train)
 
 
 class Momentum:
@@ -50,7 +48,9 @@ class Momentum:
             x = x_train[batch_mask]
             y = y_train[batch_mask]
 
-            model.predict(x, y)
+            z = model.forward(x)
+            model.loss = model.layers[model.keys[-1]].forward(z, y)
+            model.loss += sum(model.l2.values()) / 2
             dout = model.layers[model.keys[-1]].backward()
             for i in reversed(range(len(model.keys) - 1)):
                 key = model.keys[i]
@@ -65,11 +65,8 @@ class Momentum:
                         model.params[key] += velocity[key]
 
             if epochs % (epoch / 10) == 0:
-                print("ACC on epoch %d : " % epochs, (model.pred.argmax(1) == y.argmax(1)).mean())
-                print("LOSS on epoch %d : " % epochs, model.loss)
-        model.predict(x_train, y_train)
-        print("Final train_ACC : ", (model.pred.argmax(1) == y_train.argmax(1)).mean())
-        print("Final train_LOSS : ", model.loss)
+                model.eval(x, y, epochs)
+        model.eval(x_train, y_train)
 
 
 class Adagrad:
@@ -89,7 +86,9 @@ class Adagrad:
             x = x_train[batch_mask]
             y = y_train[batch_mask]
 
-            model.predict(x, y)
+            z = model.forward(x)
+            model.loss = model.layers[model.keys[-1]].forward(z, y)
+            model.loss += sum(model.l2.values()) / 2
             dout = model.layers[model.keys[-1]].backward()
             for i in reversed(range(len(model.keys) - 1)):
                 key = model.keys[i]
@@ -100,11 +99,8 @@ class Adagrad:
                     model.params[key] -= np.multiply(learning_rate / (np.sqrt(G[key] + self.epsilon)), model.grads[key])
 
             if epochs % (epoch / 10) == 0:
-                print("ACC on epoch %d : " % epochs, (model.pred.argmax(1) == y.argmax(1)).mean())
-                print("LOSS on epoch %d : " % epochs, model.loss)
-        model.predict(x_train, y_train)
-        print("Final train_ACC : ", (model.pred.argmax(1) == y_train.argmax(1)).mean())
-        print("Final train_LOSS : ", model.loss)
+                model.eval(x, y, epochs)
+        model.eval(x_train, y_train)
 
 
 class RMSProp:
@@ -125,7 +121,9 @@ class RMSProp:
             x = x_train[batch_mask]
             y = y_train[batch_mask]
 
-            model.predict(x, y)
+            z = model.forward(x)
+            model.loss = model.layers[model.keys[-1]].forward(z, y)
+            model.loss += sum(model.l2.values()) / 2
             dout = model.layers[model.keys[-1]].backward()
             for i in reversed(range(len(model.keys) - 1)):
                 key = model.keys[i]
@@ -136,11 +134,8 @@ class RMSProp:
                     model.params[key] -= np.multiply(learning_rate / (np.sqrt(G[key] + self.epsilon)), model.grads[key])
 
             if epochs % (epoch / 10) == 0:
-                print("ACC on epoch %d : " % epochs, (model.pred.argmax(1) == y.argmax(1)).mean())
-                print("LOSS on epoch %d : " % epochs, model.loss)
-        model.predict(x_train, y_train)
-        print("Final train_ACC : ", (model.pred.argmax(1) == y_train.argmax(1)).mean())
-        print("Final train_LOSS : ", model.loss)
+                model.eval(x, y, epoch=epochs)
+        model.eval(x_train, y_train)
 
 
 class AdaDelta:
@@ -163,7 +158,9 @@ class AdaDelta:
             x = x_train[batch_mask]
             y = y_train[batch_mask]
 
-            model.predict(x, y)
+            z = model.forward(x)
+            model.loss = model.layers[model.keys[-1]].forward(z, y)
+            model.loss += sum(model.l2.values()) / 2
             dout = model.layers[model.keys[-1]].backward()
             for i in reversed(range(len(model.keys) - 1)):
                 key = model.keys[i]
@@ -176,11 +173,8 @@ class AdaDelta:
                     model.params[key] -= d_t
 
             if epochs % (epoch / 10) == 0:
-                print("ACC on epoch %d : " % epochs, (model.pred.argmax(1) == y.argmax(1)).mean())
-                print("LOSS on epoch %d : " % epochs, model.loss)
-        model.predict(x_train, y_train)
-        print("Final train_ACC : ", (model.pred.argmax(1) == y_train.argmax(1)).mean())
-        print("Final train_LOSS : ", model.loss)
+                model.eval(x, y, epoch=epochs)
+        model.eval(x_train, y_train)
 
 
 class Adam:
@@ -209,7 +203,9 @@ class Adam:
             x = x_train[batch_mask]
             y = y_train[batch_mask]
 
-            model.predict(x, y)
+            z = model.forward(x)
+            model.loss = model.layers[model.keys[-1]].forward(z, y)
+            model.loss += sum(model.l2.values()) / 2
             dout = model.layers[model.keys[-1]].backward()
             for i in reversed(range(len(model.keys) - 1)):
                 key = model.keys[i]
@@ -224,8 +220,5 @@ class Adam:
 
 
             if epochs % (epoch / 10) == 0:
-                print("ACC on epoch %d : " % epochs, (model.pred.argmax(1) == y.argmax(1)).mean())
-                print("LOSS on epoch %d : " % epochs, model.loss)
-        model.predict(x_train, y_train)
-        print("Final train_ACC : ", (model.pred.argmax(1) == y_train.argmax(1)).mean())
-        print("Final train_LOSS : ", model.loss)
+                model.eval(x, y, epoch=epochs)
+        model.eval(x_train, y_train)
