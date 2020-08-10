@@ -65,6 +65,7 @@ class MulLayer:
 class AddLayer:
     def __init__(self, out=None, initializer='he', reg=0):
         self.x = None
+        self.init = initializer
         self.out = out
         self.param = None
         self.grad = None
@@ -86,7 +87,6 @@ class MSELayer:
         self.x = None
         self.y = y
         self.loss = None
-
 
     def forward(self, x):
         self.x = x
@@ -191,3 +191,15 @@ class Dropout:
 
     def backward(self, dout):
         return dout * self.mask
+
+
+class Flatten:
+    def __init__(self):
+        self.shape = None
+        self.activation = True
+
+    def forward(self, x):
+        return x.reshape(x.shape[0], -1)
+
+    def backward(self, dout):
+        return dout.reshape(-1, *self.shape)

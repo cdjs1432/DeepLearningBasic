@@ -178,7 +178,7 @@ class AdaDelta:
 
 
 class Adam:
-    def __init__(self, batch_size, beta_1 = 0.9, beta_2 = 0.999):
+    def __init__(self, batch_size, beta_1=0.9, beta_2=0.999):
         self.x = None
         self.y = None
         self.model = None
@@ -212,13 +212,10 @@ class Adam:
                 dout = model.layers[key].backward(dout)
                 if key in model.params:
                     model.grads[key] = model.layers[key].grad
-                    m[key] = self.beta_1 * m[key] + (1 - self.beta_1)*model.grads[key]
+                    m[key] = self.beta_1 * m[key] + (1 - self.beta_1) * model.grads[key]
                     m_hat[key] = m[key] / (1 - self.beta_1 * self.beta_1)
                     v[key] = self.beta_2 * v[key] + (1 - self.beta_2) * model.grads[key] * model.grads[key]
                     v_hat[key] = v[key] / (1 - self.beta_2 * self.beta_2)
                     model.params[key] -= learning_rate * m_hat[key] / np.sqrt(v_hat[key] + self.epsilon)
-
-
             if epochs % (epoch / 10) == 0:
                 model.eval(x, y, epoch=epochs)
-        model.eval(x_train, y_train)
